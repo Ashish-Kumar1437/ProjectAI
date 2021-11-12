@@ -18,10 +18,10 @@ from time import sleep,strftime
 f=open('assistant_name.txt','r')
 assistant_name=f.read().title()
 f.close()
-id=0
+t=0
 engine =pyttsx3.init('sapi5')
 voices=engine.getProperty('voices')
-engine.setProperty('voice',voices[id].id)
+engine.setProperty('voice',voices[t].id)
 
 def speak(text):
     write(f'{assistant_name} : {text}')
@@ -158,12 +158,10 @@ def Start_AI():
                  start=2   
             speak('what should be the fie name?')
             file=takeCommand().title()
-            while 'None' in file:
-                speak('Can you repeat once again')
-                file=takeCommand().lower()
-            f=open(f'{file}.txt','w')
+            f=open(os.path.join(f'{os.getcwd()}/Documents',f'{file}.txt'),'w')
             f.write(note)
             f.close()
+            speak('File Saved')
 
         elif "goodbye" in statement or "offline" in statement or "bye" in statement:
                 speak("Alright sir, going offline. It was nice working with you")
@@ -246,7 +244,8 @@ def changename():
      root.title(assistant_name)
      root.update()
      newnameentry.delete(0,'end')
-    id=voice.get()
+    t=voice.get()
+    engine.setProperty('voice',voices[t].id)
     print(id)
     
 def mainscreen():
