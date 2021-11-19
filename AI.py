@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter.font import BOLD, ITALIC, names
 from PIL import Image,ImageTk
-from pygame.constants import DOUBLEBUF
 import pyttsx3
 import speech_recognition as sr
 import datetime
@@ -92,6 +91,10 @@ def Start_AI():
         elif 'open youtube' in statement:
             speak('Opening Youtube')
             webbrowser.open_new_tab('http://www.youtube.com')
+        
+        elif 'open gmail' in statement:
+            webbrowser.open_new_tab("gmail.com")
+            speak("opening Google Mail")
 
         elif 'open geeksforgeeks' in statement or 'open geeks'in statement:
             speak('Opening GeeksForGeeks')
@@ -113,6 +116,14 @@ def Start_AI():
 
         elif 'pause song' in statement or 'pause music' in statement:
             pyautogui.press('playpause')
+            
+        elif 'news' in statement:
+            news = webbrowser.open_new_tab("https://timesofindia.indiatimes.com/home/headlines")
+            speak('Here are some headlines from the Times of India,Happy reading')
+        
+        elif 'search'  in statement:
+            statement = statement.replace("search", "")
+            webbrowser.open_new_tab(statement)
 
         elif 'time' in statement:
             curtime=datetime.datetime.now().strftime('%H:%M:%S')
@@ -125,18 +136,15 @@ def Start_AI():
             print(hour," ",min)
             speak(f'Time is {hour}{min}{str}')
 
+        elif 'the date' in statement:
+            date=datetime.datetime.today().strftime(r"%d %m %y")
 
         elif 'switch window' in statement or 'next window' in statement:
              pyautogui.keyDown('altleft')
              pyautogui.press('tab')
              sleep(0.5)
              pyautogui.keyUp('altleft')
-        elif 'calculate' in statement:
-              statement=statement.replace('calculate','')
-              ans=eval(statement)
-              speak(f'Answer is {ans}')
-              print(f'{statement} = {ans}')
-          
+        
         elif 'joke' in statement:
             joke=pyjokes.get_joke()
             print(joke)
@@ -147,7 +155,6 @@ def Start_AI():
             start=1
             note=''
             while start==1: 
-                print(start)
                 statement=takeCommand().lower()
                 if 'save this file' not in statement:
                     if statement == 'none':
@@ -162,7 +169,26 @@ def Start_AI():
             f.write(note)
             f.close()
             speak('File Saved')
+        
+        elif "hello" in statement:
+            wishme()
+            
+        elif "thank you" in statement or "thanks" in statement:
+            speak("welcome sir")
+            
+        elif "can you do for me" in statement:
+            speak("I can do multiple tasks for you. tell me whatever you want to perform")
+            
+        elif "old are you" in statement:
+            speak("I am a little baby sir")
 
+        elif 'who are you' in statement or 'what can you do' in statement:
+            speak(f"I am {assistant_name} version 2 point O your personal assistant. I am programmed to minor tasks like opening youtube,google chrome, gmail and Geeksforgeeks ,tell date and time, search wikipedia, get top headline news from times of india and you can do some normal talk as well !")
+
+
+        elif "who made you" in statement or "who created you" in statement or "who discovered you" in statement:
+            speak("My Creators are Ashish and Mansi")
+            
         elif "goodbye" in statement or "offline" in statement or "bye" in statement:
                 speak("Alright sir, going offline. It was nice working with you")
                 run=0
@@ -179,8 +205,9 @@ def Start_AI():
     root.update()
 
 def time():
-       string = strftime('%H:%M:%S')
-       clock.config(text = string)
+       string = strftime('%H:%M:%S %p')
+       hour=int(string[0:2])%12
+       clock.config(text = f'{hour}:{string[3:]}')
        clock.after(1000, time)
 
 def workscreen():
@@ -246,7 +273,7 @@ def changename():
      newnameentry.delete(0,'end')
     t=voice.get()
     engine.setProperty('voice',voices[t].id)
-    print(id)
+    homefun()
     
 def mainscreen():
     global root
@@ -289,7 +316,7 @@ def mainscreen():
     # =======================home screen=============================
     
     global clock
-    clock=Label(root,font='times 30 bold',background = 'black', foreground = 'white',width=7,height=1)
+    clock=Label(root,font='times 30 bold',background = 'black', foreground = 'white',width=9,height=1)
     clock.pack(side=BOTTOM,anchor = 'ne',padx=20,pady=20)
     time()
     global img2,img3
@@ -348,9 +375,9 @@ def mainscreen():
     fb=ImageTk.PhotoImage(Image.open('icons\iconfacebook.png').resize((40,40),Image.ANTIALIAS))
     linkin=ImageTk.PhotoImage(Image.open('icons\linkedin.png').resize((40,40),Image.ANTIALIAS))
     info1=Frame(aboutf1,bg='#03f0fc',width=50)
-    insta1=Button(info1,image=insta,bg='#03f0fc',activebackground='#03f0fc',relief='flat')
-    fb1=Button(info1,image=fb,bg='#03f0fc',activebackground='#03f0fc',relief='flat')
-    link1=Button(info1,image=linkin,bg='#03f0fc',activebackground='#03f0fc',relief='flat')
+    insta1=Button(info1,image=insta,bg='#03f0fc',activebackground='#03f0fc',relief='flat',command=lambda: webbrowser.open_new_tab('www.instagram.com/_a.s.h.i.s.h_15/'))
+    fb1=Button(info1,image=fb,bg='#03f0fc',activebackground='#03f0fc',relief='flat',command=lambda: webbrowser.open_new_tab('https://m.facebook.com/profile.php?id=100009701501785&refsrc=deprecated&_rdr'))
+    link1=Button(info1,image=linkin,bg='#03f0fc',activebackground='#03f0fc',relief='flat',command=lambda: webbrowser.open_new_tab('www.linkedin.com/in/ashishkumar1502/'))
     name.pack()
     email.pack()
     insta1.pack(side=LEFT,padx=10)
@@ -362,11 +389,11 @@ def mainscreen():
     global aboutf2
     aboutf2=Frame(root,bg='#03f0fc',width=50)
     name2=Label(aboutf2,text='Mansi Srivastav',font=('helvetica',15,ITALIC),bg='#03f0fc')
-    email2=Label(aboutf2,text='Email:- mansisrivastav2102@gmail.com',font=('helvetica',15,ITALIC),bg='#03f0fc')
+    email2=Label(aboutf2,text='Email:- 23mansisri@gmail.com',font=('helvetica',15,ITALIC),bg='#03f0fc')
     info2=Frame(aboutf2,bg='#03f0fc',width=50)
-    insta2=Button(info2,image=insta,bg='#03f0fc',activebackground='#03f0fc',relief='flat',command=lambda: webbrowser.open_new_tab('www.google.com'))
-    fb2=Button(info2,image=fb,bg='#03f0fc',activebackground='#03f0fc',relief='flat')
-    link2=Button(info2,image=linkin,bg='#03f0fc',activebackground='#03f0fc',relief='flat')
+    insta2=Button(info2,image=insta,bg='#03f0fc',activebackground='#03f0fc',relief='flat',command=lambda: webbrowser.open_new_tab('www.instagram.com/mansi_srivastav_23/'))
+    fb2=Button(info2,image=fb,bg='#03f0fc',activebackground='#03f0fc',relief='flat',command=lambda: webbrowser.open_new_tab('www.facebook.com/mansi.srivastava.3538039'))
+    link2=Button(info2,image=linkin,bg='#03f0fc',activebackground='#03f0fc',relief='flat',command=lambda: webbrowser.open_new_tab('www.linkedin.com/in/mansi-srivastav-4b0799202/'))
     name2.pack()
     email2.pack()
     insta2.pack(side=LEFT,padx=10)
